@@ -1,0 +1,20 @@
+{
+    "name": "scripta/compras",
+    "description": "Utilitario lista de compras okituke",
+    "type": "project",
+    "license": "commercial",
+    "authors": [
+        {
+            "name": "Lucas Pedro",
+            "email": "lucasbarreiros2009@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "hautelook/phpass": "^1.1",
+        "zendframework/zend-crypt": "^3.3"
+    },
+    "autoload": {
+        "psr-4": {"scripta\\lib\\": "scripta/lib"}
+   }
+}

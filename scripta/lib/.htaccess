@@ -1,0 +1,2 @@
+deny from all
+ErrorDocument 403 /okituke/redeokituke/compras/paginas/404.html

@@ -1,0 +1,4 @@
+ErrorDocument 404 /okituke/redeokituke/compras/paginas/404.html
+Options +FollowSymlinks
+RewriteEngine on
+RewriteRule ^inicio$  home.php
