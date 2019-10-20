@@ -34,21 +34,20 @@ if(isset($_SESSION['compras']) && isset($_SESSION['compras']['idUsuario'])){
         <span class="input-icon text-center">
           <i class="fas fa-user"></i>
         </span>
-        <label for="u" class="sr-only">Usuário ou Email</label>
-        <input name="u" type="text" class="form-control" placeholder="Usuário ou Email" required="" autofocus="">
+        <label for="usuario" class="sr-only">Usuário ou Email</label>
+        <input name="usuario" type="text" class="form-control" placeholder="Usuário ou Email" required="" autofocus="">
       </div>
       <div class="input-group">
         <span class="input-icon text-center">
           <i class="fas fa-lock"></i>
         </span>
-        <label for="s" class="sr-only">Senha</label>
-        <input name="s" type="password" class="form-control" placeholder="Senha" required="">
-        <input type="hidden" name="opr" value="1">
+        <label for="senha" class="sr-only">Senha</label>
+        <input name="senha" type="password" class="form-control" placeholder="Senha" required="">
       </div>
       <div class="input-group mb-3">
         <div class="input-group-prepend">
           <div class="input-group-text">
-            <input name='c' type="checkbox">
+            <input name='lembrar' type="checkbox">
           </div>
           <span class="input-group-text">Lembrar de Mim</span>
         </div>

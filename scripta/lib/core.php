@@ -34,7 +34,7 @@ class core{
 	 * $c = checkbox do cookie
 	 * @return JSON
 	 */
-	public function logar($suario = "", $senha = "", $lembrar = "off"){
+	public function logar($usuario = "", $senha = "", $lembrar = "off"){
 		
 		if($lembrar == "on"){
 			$cookie = 86400;
@@ -222,18 +222,11 @@ class core{
 	 * 
 	 */
 	private function apagarLista($id = 0){
-		$sql = $this->db->prepare("DELETE FROM `compras_listas` WHERE `id` = :id");
-		$sql->execute(array(':id' => $id));
-	}
-	/**
-	 * Função privada para tira a lista dos usuários que a tem
-	 * Usada junto com a função "listas"
-	 * $id = id da lista
-	 * $uids = array com ids dos usuários
-	 */
-	private function limparListas($id = 0, $uid = array()){
-		foreach ($uids as $uid) {
-			$this->modificarListasUsuario($id, $uid, 2);
+		$sql = $this->db->prepare("DELETE FROM `compras_listas` WHERE `compras_listas`.`id` = :id");
+		if($sql->execute(array(':id' => $id))){
+			return true;
+		}else{
+			return false;
 		}
 	}
 	/**
@@ -244,9 +237,8 @@ class core{
 	 * @return void
 	 */
 	private function modificarListasUsuario($id = 0, $uid = 0, $operacao = ""){
-		
-		$sql = $this->db->prepare("SELECT (`listas`) FROM `compras_usr` WHERE id = :id");
-		$sql->execute(array(':id' => $uid));
+		$sql = $this->db->prepare("SELECT (`listas`) FROM `compras_usr` WHERE id = :uid");
+		$sql->execute(array(':uid' => $uid));
 		$lista = $sql->fetch();
 		$lista = json_decode($lista[0]);
 		if ($operacao == "adicionar"){
@@ -254,13 +246,17 @@ class core{
 			$lista = json_encode(array_unique($lista));
 		}elseif($operacao == "remover"){
 			$index = array_search($id, $lista);
-			if($index != false){
-				unset($lista[$index]);
-			}
+			unset($lista[$index]);
 			$lista = json_encode(array_unique($lista));
 		}
-		$sql = $this->db->prepare('UPDATE `compras_usr` SET `listas` = :listas WHERE id = :uid');
-		$sql->execute(array(':listas' => $lista, ':uid' => $uid));
+		$sql = $this->db->prepare('UPDATE `compras_usr` SET `listas` = :lista WHERE id = :uid');
+		
+		if($sql->execute(array(':lista' => $lista, ':uid' => $uid))){
+			return true;
+		}else{
+			return false;
+		}
+		
 	}
 	/**
 	 * Modifica a array de listas de adeptos do modelo
@@ -271,22 +267,24 @@ class core{
 	 */
 	private function modificarListasCompras($id = 0, $uid = 0, $operacao = ""){
 		
-		$sql = $this->db->prepare("SELECT (`listas`) FROM `compras_usr` WHERE id = :id");
-		$sql->execute(array(':id' => $uid));
+		$sql = $this->db->prepare("SELECT (`usuarios`) FROM `compras_listas` WHERE id = :id");
+		$sql->execute(array(':id' => $id));
 		$lista = $sql->fetch();
 		$lista = json_decode($lista[0]);
 		if ($operacao == "adicionar"){
-			$lista[] = $id;
+			$lista[] = $uid;
 			$lista = json_encode(array_unique($lista));
 		}elseif($operacao == "remover"){
-			$index = array_search($id, $lista);
-			if($index != false){
-				unset($lista[$index]);
-			}
+			$index = array_search($uid, $lista);
+			unset($lista[$index]);
 			$lista = json_encode(array_unique($lista));
 		}
-		$sql = $this->db->prepare('UPDATE `compras_usr` SET `listas` = :listas WHERE id = :uid');
-		$sql->execute(array(':listas' => $lista, ':uid' => $uid));
+		$sql = $this->db->prepare('UPDATE `compras_listas` SET `usuarios` = :lista WHERE id = :id');
+		if($sql->execute(array(':lista' => $lista, ':id' => $id))){
+			return true;
+		}else{
+			return false;
+		}
 	}
 	/**
 	 * Adicionar ou Editar lista
@@ -296,10 +294,15 @@ class core{
 	 * $operacao = default em adicionar
 	 * @return JSON
 	 */
-	public function Lista($id = 0, $uid = 0, $lista = array(), $operacao = 1){
+	public function Lista($id = 0, $uid = 0, $lista = array(), $operacao = ""){
 		if($operacao == "adicionar"){
-			if(is_int($this->adicionarLista($uid, $lista))){
-				print_r(json_encode(array('OK' => 0, 'mensagem' => "Lista adicionada com sucesso! Voltando à página inicial...")));
+			$idLista = $this->adicionarLista($uid, $lista);
+			if(!empty($idLista)){
+				if($this->modificarListasUsuario($idLista, $uid, $operacao)){
+					print_r(json_encode(array('OK' => 0, 'mensagem' => "Lista adicionada com sucesso!")));
+				}else{
+					print_r(json_encode(array('OK' => 1, 'mensagem' => "Houve um erro interno ao adicionar sua lista. Por favor, entre em contato com a sua AVBN.")));
+				}
 			}else{
 				print_r(json_encode(array('OK' => 1, 'mensagem' => "Falha ao adicionar lista. Tente novamente mais tarde...")));
 			}
@@ -307,14 +310,21 @@ class core{
 			
 		}elseif($operacao == "remover"){
 			if($this->checarPropriedade($id, $uid)){
-				session_start();
 				if($_SESSION['compras']['tipoUsuario'] != 0){
-
+					$array_usuarios = $this->pegarLista($id);
+					$array_usuarios = json_decode($array_usuarios['usuarios']);
+					foreach ($array_usuarios as $usuario) {
+						if($this->modificarListasUsuario($id, $usuario, $operacao)){} //Para ignorar o retorno
+					}
+					if($this->apagarLista($id)){
+						print_r(json_encode(array('OK' => 0, 'mensagem' => "Modelo deletado com sucesso!")));
+					}
 				}else{
-
+					$this->modificarListasCompras($id, $uid, $operacao);
+					$this->modificarListasUsuario($id, $uid, $operacao);
+					print_r(json_encode(array('OK' => 0, 'mensagem' => "Lista deletada com sucesso!")));
 				}
 			}
-			
 		}
 		//print_r(array($uid, $titulo, $conteudo, $total, $tipo));
 		//print_r(json_encode(array('OK' => '$erro', 'mensagem' => '$msg')));
@@ -326,9 +336,9 @@ class core{
 		if($operacao == "criarConta"){
 			if($this->checarAutoridade($uid, $tipo, $operacao)){
 				if($this->criarConta($POST, $uid)){
-					print_r(json_encode(array('OK' => 0, 'mensagem' => "Usuário criado! Você será redirecionado para a tela inicial...")));
+					print_r(json_encode(array('OK' => 0, 'mensagem' => "Usuário criado!")));
 				}else{
-					print_r(json_encode(array('OK' => 1, 'mensagem' => "O usuário não foi criado! Tente novamente mais tarde...")));
+					print_r(json_encode(array('OK' => 1, 'mensagem' => "O usuário não foi criado! Tente com outro nome de usuário e email ou tente novamente mais tarde...")));
 				}
 			}else{
 				print_r(json_encode(array('OK' => 1, 'mensagem' => "Falha ao criar conta. Você não tem permissão para fazer isso!")));

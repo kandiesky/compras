@@ -18,7 +18,7 @@ if(is_array($array_listas) && count($array_listas) > 0){
                          <thead>
                             <tr>
                                 <th>Título</th>
-                                <th>Proprietário</th>
+                                <th>Opções</th>
                                 <th>Modelo</th>
                                 <th>Data</th>
                             </tr>
@@ -28,11 +28,33 @@ if(is_array($array_listas) && count($array_listas) > 0){
     ";
     foreach (array_reverse($array_listas) as $lista) {
         $lista = $core->pegarLista($lista);
+        if($lista['tipo'] != 0){
+            $modelo = "Sim";
+            $btn_modelo = "";
+        }else{
+            $modelo = "Não";
+            $btn_modelo = "";
+        }
         echo "
                             <tr>
                                 <td>{$lista['titulo']}</td>
-                                <td>0</td>
-                                <td>0</td>
+                                <td>
+                                    <div class='d-flex justify-content-center'>
+                                        <a href='#' onclick='deletar(1, {$lista['id']})' class='btn btn-danger btn-icon-split mr-1'>
+                                            <span class='icon text-white-50'>
+                                                <i class='fas fa-trash'></i>
+                                            </span>
+                                            <span class='text'>Deletar</span>
+                                        </a>
+                                        <a href='#' onclick='carregar(\"editar\", {$lista['id']})' class='btn btn-okt-light btn-icon-split'>
+                                            <span class='icon text-white-50'>
+                                                <i class='fas fa-edit'></i>
+                                            </span>
+                                            <span class='text'>Editar</span>
+                                        </a>
+                                    </div>
+                                </td>
+                                <td>{$modelo}</td>
                                 <td>{$lista['data']}</td>
                             </tr>
         ";

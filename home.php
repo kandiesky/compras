@@ -42,7 +42,7 @@ $core = new scripta\lib\core();
             </li>
             <hr class="sidebar-divider">
             <div class="sidebar-heading">
-                LISTAS DE COMPRAS
+                PLATAFORMA
             </div>
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
@@ -50,12 +50,12 @@ $core = new scripta\lib\core();
                     <i class="fas fa-list    "></i>
                     <span>SUAS LISTAS</span>
                 </a>
-                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div id="collapseTwo" class="collapse" data-parent="#accordionSidebar">
                     <div class="bg-okt-dark py-2 collapse-inner rounded collapse-fix">
+                        <h6 class="collapse-header">OPÇÕES COM LISTAS</h6>
                         <a class="collapse-item" onclick="carregar('adicionar', 0);" href="#">CRIAR NOVA LISTA</a>
-                    </div>
-                    <div class="bg-okt-dark py-2 collapse-inner rounded collapse-fix">
                         <a class="collapse-item" onclick="carregar('listas', 0);" href="#">TODAS AS LISTAS</a>
+                        <a class="collapse-item" onclick="carregar('todo', 0);" href="#">USAR LISTA DE MODELO</a>
                     </div>
                 </div>
             </li>
@@ -65,11 +65,13 @@ $core = new scripta\lib\core();
                     <i class="fas fa-ad"></i>
                     <span>CONTAS</span>
                 </a>
-                <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
-                    data-parent="#accordionSidebar">
-                    <div class="bg-okt-dark py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">RECOMENDADOS:</h6>
+                <div id="collapseUtilities" class="collapse" data-parent="#accordionSidebar">
+                    <div class="bg-okt-dark py-2 collapse-inner rounded collapse-fix">
+                        <h6 class="collapse-header">CONTAS DE USUÁRIOS</h6>
                         <a class="collapse-item" href="#" onclick="carregar('conta', 0)">CRIAR CONTA DE USUÁRIO</a>
+                        <hr class="sidebar-divider">
+                        <h6 class="collapse-header">MINHA CONTA</h6>
+                        <a class="collapse-item" href="#" onclick="carregar('todo', 0)">MUDAR MINHA SENHA</a>
                     </div>
                 </div>
             </li>
@@ -78,11 +80,19 @@ $core = new scripta\lib\core();
                 AJUSTES
             </div>
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a onclick="carregar('todo', 0)" class="nav-link" href="#">
                     <i class="fa fa-cogs" aria-hidden="true"></i>
                     <span>PERSONALIZAR</span></a>
             </li>
-
+            <hr class="sidebar-divider">
+            <div class="sidebar-heading">
+                CONTA
+            </div>
+            <li class="nav-item">
+                <a onclick="sair(1)" class="nav-link" href="#">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>SAIR</span></a>
+            </li>
         </ul>
         <!-- FIM DA BARRA LATERAL -->
         <!-- INÍCIO DA PÁGINA (CONTENT-WRAPPER) -->
@@ -186,7 +196,7 @@ $core = new scripta\lib\core();
                         </div>
                         <div class="modal-footer">
                         <button data-dismiss="modal" class="btn btn-primary">CANCELAR</button>
-                        <button onclick="deletar(2, this)" data-dismiss="modal" class="btn btn-danger">CONFIRMAR</button>
+                        <button onclick="deletar(2, this)" class="btn btn-danger">CONFIRMAR</button>
                         </div>
                     </div>
                 </div>
@@ -197,7 +207,7 @@ $core = new scripta\lib\core();
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title"></h5>
+                            <h5 class="modal-title">RESULTADO DA OPERAÇÃO:</h5>
                         </div>
                         <div class="modal-body">
                             <p></p>

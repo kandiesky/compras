@@ -92,7 +92,7 @@ $(document).ready(function () {
         $('#aviso').modal();
     }else{
         $('#content, #accordionSidebar, .collapse-fix').on('click', function () {
-           $('#collapseTwo').removeClass('show');
+           $('#collapseTwo, #collapseUtilities').removeClass('show');
         });
     }
     //Data tables
@@ -156,26 +156,15 @@ function carregar(pagina = "", id = 0) {
                           dataType: "JSON",
                           data: $('form').serialize(),
                           beforeSend: function () {
-                            $('button .login').hide(0, function () {
-                              $('button .load').show(0)
-                            })
+                            $('#carregamento').modal();
                           },
                           success: function (response) {
-                            $('button .load').hide(0, function () {
-                              if (response["OK"] != 0) {
-                                $('button').removeClass('btn-primary').addClass('btn-danger').find('.login').text(
-                                  response["mensagem"])
-                                  $('button .login').show(0)
-                              } else {
-                                $('button').removeClass('btn-danger btn-primary').addClass('btn-success').find(
-                                  '.login').text(response["mensagem"])
-                                $('button .login').show(0, function () {
-                                  setTimeout(() => {
-                                    location.assign('inicio')
-                                  }, 2500)
-                                })
-                              }
-                            })
+                              setTimeout(() => {
+                                  $('#carregamento').modal('hide');
+                                    modal = $('#conclusao .modal-content');
+                                    $(modal).find('p').text(response["mensagem"])
+                                    $(modal).modal(0);
+                              }, 1500);
                           }
                         })
                       })
@@ -241,14 +230,14 @@ function addItem() {
 }
 
 function deletar(operacao = 1, data = 0){ //Data é flexível. Pode ser um ID ou o DOM
-    if(operacao = 1){
+    if(operacao == 1){
         $('#confirmacao .btn-danger').attr('data-deletar', data);
         $('#confirmacao').modal('show');
     }else{
         id = $(data).attr('data-deletar');
         $.ajax({
             type: "POST",
-            url: "scripta/funcoesLista.php",
+            url: "ajax/funcoesLista.php",
             data: {"operacao": "remover", "id": id},
             dataType: "JSON",
             complete: function (response) {
@@ -257,7 +246,7 @@ function deletar(operacao = 1, data = 0){ //Data é flexível. Pode ser um ID ou
                     modal.find('.modal-title').text(response[0]);
                     modal.find('.modal-body p').text(response[1]);
                     setTimeout(() => {
-                        location.reload();
+                        //location.reload();
                     }, 2500);
                 }, 500);
             }

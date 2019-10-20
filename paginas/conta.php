@@ -17,61 +17,67 @@
         <h4>Informações do usuário</h4>
         <div class="input-group mb-3">
           <div class="input-group-prepend">
-            <span class="input-group-text">Nome</span>
+            <span class="input-group-text">&nbsp;&nbsp;Nome&nbsp;&nbsp;</span>
           </div>
           <input required type="text" data-nome="nome" class="form-control">
+          <div class="input-group-append">
+            <span class="input-group-text">&nbsp; <i class="fas fa-signature"></i></i></span>
+          </div>
         </div>
         <div class="input-group mb-3">
           <div class="input-group-prepend">
-            <span class="input-group-text">Login</span>
+            <span class="input-group-text">&nbsp;&nbsp;Login&nbsp;&nbsp;&nbsp;</span>
           </div>
           <input required type="text" data-nome="login" class="form-control">
+          <div class="input-group-append">
+            <span class="input-group-text">&nbsp;<i class="fas fa-user"></i>&nbsp;</span>
+          </div>
         </div>
         <div class="input-group mb-3">
           <div class="input-group-prepend">
-            <span class="input-group-text">Senha&nbsp;&nbsp;</span>
+            <span class="input-group-text">&nbsp;&nbsp;Senha&nbsp;&nbsp;</span>
           </div>
           <input required type="password" data-nome="senha" class="form-control numerico">
           <div class="input-group-append">
-            <span class="input-group-text">&nbsp;*****&nbsp;</span>
+            <span class="input-group-text">&nbsp;<i class="fas fa-lock"></i>&nbsp;</span>
           </div>
         </div>
         <div class="input-group mb-3">
           <div class="input-group-prepend">
-            <span class="input-group-text">Email&nbsp;</span>
+            <span class="input-group-text">&nbsp;&nbsp;Email&nbsp;&nbsp;&nbsp;</span>
           </div>
           <input required type="text" data-nome="email" class="form-control validar">
           <div class="input-group-append">
-            <span class="input-group-text">@</span>
+            <span class="input-group-text">&nbsp;<i class="fas fa-envelope"></i>  </span>
           </div>
         </div>
         <div class="input-group mb-3">
           <div class="input-group-prepend">
-            <span class="input-group-text">Local&nbsp;</span>
+            <span class="input-group-text">&nbsp;&nbsp;Local&nbsp;&nbsp;&nbsp;</span>
           </div>
           <input required type="text" data-nome="local" class="form-control validar">
           <div class="input-group-append">
-            <span class="input-group-text"><i class="fas fa-goodreads"></i></span>
+            <span class="input-group-text">&nbsp;<i class="fas fa-map-marker-alt"></i>&nbsp;</span>
           </div>
         </div>
         <div class="input-group mb-3">
           <div class="input-group-prepend">
-            <span class="input-group-text">Telefone&nbsp;</span>
+            <span class="input-group-text">Telefone</span>
           </div>
           <input type="text" data-nome="telefone" class="form-control validar">
           <div class="input-group-append">
-            <span class="input-group-text">(55)</span>
+            <span class="input-group-text">&nbsp;<i class="fas fa-mobile-alt"></i>&nbsp;  </span>
           </div>
         </div>
         <div class="input-group">
           <div class="input-group-prepend">
             <div class="input-group-text mr-3">
               <input type="checkbox" checked name="anuncios">
-              <span class="input-group-text ml-3">Anúncios</span>
+              <span class="input-group-text ml-3"><i class="fas fa-ad mr-1"></i> Anúncios</span>
             </div>
             <div class="input-group-text ml-3">
               <input type="checkbox" name="avbn">
-              <span class="input-group-text ml-3">AVBN</span>
+              <span class="input-group-text ml-3"><i class="fas fa-users-cog mr-1"></i> AVBN</span>
             </div>
           </div>
         </div>
