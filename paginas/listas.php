@@ -46,7 +46,7 @@ if(is_array($array_listas) && count($array_listas) > 0){
                                             </span>
                                             <span class='text'>Deletar</span>
                                         </a>
-                                        <a href='#' onclick='carregar(\"editar\", {$lista['id']})' class='btn btn-okt-light btn-icon-split'>
+                                        <a href='#' onclick='carregar(\"todo\", {$lista['id']})' class='btn btn-okt-light btn-icon-split'>
                                             <span class='icon text-white-50'>
                                                 <i class='fas fa-edit'></i>
                                             </span>

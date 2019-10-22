@@ -58,17 +58,17 @@ if(is_array($array_listas) && count($array_listas) > 0){
                         </table>
                     </div>
                     <div class='d-flex justify-content-end mt-2'>
-                        <a href='#' onclick='deletar(1, {$lista['id']})' class='btn btn-danger btn-icon-split mr-2'>
+                        <a href='#' onclick='carregar(\"todo\", {$lista['id']})' class='btn btn-okt-light btn-icon-split'>
+                            <span class='icon text-white-50'>
+                                <i class='fas fa-edit'></i>
+                            </span>
+                            <span class='text'>".(($lista['tipo'] == 0)?'Editar Lista':'Editar Lista')."</span>
+                        </a>
+                        <a href='#' onclick='deletar(1, {$lista['id']})' class='btn btn-danger btn-icon-split ml-2'>
                             <span class='icon text-white-50'>
                                 <i class='fas fa-trash'></i>
                             </span>
                             <span class='text'>Deletar Lista</span>
-                        </a>
-                        <a href='#' onclick='carregar(\"editar\", {$lista['id']})' class='btn btn-okt-light btn-icon-split'>
-                            <span class='icon text-white-50'>
-                                <i class='fas fa-edit'></i>
-                            </span>
-                            <span class='text'>Editar Lista</span>
                         </a>
                     </div>
                 </div>

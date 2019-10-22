@@ -50,6 +50,22 @@
           <span class="input-group-text">R$</span>
         </div>
       </div>
+<?php 
+      session_start();
+      if($_SESSION['compras']['tipoUsuario'] > 0){
+?>
+      <div class="input-group">
+          <div class="input-group-prepend">
+            <div class="input-group-text mr-1">
+              <input type="checkbox" class="cursor-pointer" onclick="alert('ATENÇÃO! Listas criadas como modelo não podem ser editadas depois de criadas.');" name="anuncios">
+              <span class="input-group-text ml-3"><i class="fas fa-ad mr-1"></i> Lista Modelo / Anunciante</span>
+            </div>
+          </div>
+        </div>
+<?php
+      }
+      session_write_close();
+?>
       <div class="d-flex justify-content-center mt-2" style='display: none !important'>
         <a class="text-white cursor-pointer btn btn-danger btn-icon-split mr-2">
           <span class="icon text-white-50">

@@ -18,12 +18,11 @@ if(isset($_SESSION['compras']) && isset($_SESSION['compras']['idUsuario'])){
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
   <!-- CSS -->
-  <link rel="stylesheet" href="css/login.min.css?v=01">
+  <link rel="stylesheet" href="css/app_compras_login.css">
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
-  <title>Lista de Compras | Login</title>
+  <title>Listas de Compras | Login</title>
 </head>
 
 <body>

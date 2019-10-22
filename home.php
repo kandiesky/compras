@@ -18,9 +18,8 @@ $core = new scripta\lib\core();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <!-- CSS -->
-    <link rel="stylesheet" href="sb/scss/sb-admin-2.min.css">
+    <link rel="stylesheet" href="css/app_compras.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
-    <link href="sb/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
     <title>Lista de Compras</title>
 </head>
@@ -53,12 +52,15 @@ $core = new scripta\lib\core();
                 <div id="collapseTwo" class="collapse" data-parent="#accordionSidebar">
                     <div class="bg-okt-dark py-2 collapse-inner rounded collapse-fix">
                         <h6 class="collapse-header">OPÇÕES COM LISTAS</h6>
-                        <a class="collapse-item" onclick="carregar('adicionar', 0);" href="#">CRIAR NOVA LISTA</a>
-                        <a class="collapse-item" onclick="carregar('listas', 0);" href="#">TODAS AS LISTAS</a>
+                        <a class="collapse-item" onclick="carregar('adicionar', 0);" href="#">ADICIONAR LISTA</a>
+                        <a class="collapse-item" onclick="carregar('listas', 0);" href="#">MINHAS LISTAS</a>
                         <a class="collapse-item" onclick="carregar('todo', 0);" href="#">USAR LISTA DE MODELO</a>
                     </div>
                 </div>
             </li>
+<?php 
+            if($usuario['idUsuario'] == 1 || $usuario['tipoUsuario'] > 0){
+?>
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
                     aria-expanded="true" aria-controls="collapseUtilities">
@@ -69,6 +71,7 @@ $core = new scripta\lib\core();
                     <div class="bg-okt-dark py-2 collapse-inner rounded collapse-fix">
                         <h6 class="collapse-header">CONTAS DE USUÁRIOS</h6>
                         <a class="collapse-item" href="#" onclick="carregar('conta', 0)">CRIAR CONTA DE USUÁRIO</a>
+                        <a class="collapse-item" href="#" onclick="carregar('usuarios', 0)">TODOS OS MEUS USUÁRIOS</a>
                         <hr class="sidebar-divider">
                         <h6 class="collapse-header">MINHA CONTA</h6>
                         <a class="collapse-item" href="#" onclick="carregar('todo', 0)">MUDAR MINHA SENHA</a>
@@ -84,6 +87,9 @@ $core = new scripta\lib\core();
                     <i class="fa fa-cogs" aria-hidden="true"></i>
                     <span>PERSONALIZAR</span></a>
             </li>
+<?php
+            }
+?>
             <hr class="sidebar-divider">
             <div class="sidebar-heading">
                 CONTA
@@ -104,7 +110,7 @@ $core = new scripta\lib\core();
                         <div class="card-body p-1">
                             <nav class="navbar navbar-expand-lg">
                                 <a class="navbar-brand text-white" onclick="location.reload();" href="#">
-                                <i class="fas fa-home"></i>&nbsp;<span>Início</span></a>
+                                    <i class="fas fa-home"></i>&nbsp;<span>Início</span></a>
                                 <button class="navbar-toggler text-white    " type="button" data-toggle="collapse"
                                     data-target="#funcoesNavDrop" aria-controls="navbarNav" aria-expanded="false"
                                     aria-label="Toggle navigation">
@@ -113,17 +119,64 @@ $core = new scripta\lib\core();
                                 <div class="collapse navbar-collapse" id="funcoesNavDrop">
                                     <ul class="navbar-nav">
                                         <li class="nav-item m-3">
-                                            <a class="collapse-item text-white" onclick="carregar('adicionar', 0);" href="#">
-                                                <i class="fas fa-list"></i>
-                                                <span>SUAS LISTAS</span>
+                                            <a class="collapse-item text-white" onclick="carregar('adicionar', 0);"
+                                                href="#">
+                                                <i class="fas fa-list mr-2"></i>
+                                                <span>ADICIONAR LISTA</span>
                                             </a>
                                         </li>
                                         <li class="nav-item m-3">
-                                            <a class="collapse-item text-white" onclick="carregar('adicionar', 0);" href="#">
-                                                <i class="fas fa-list"></i>
-                                                <span>TODAS AS LISTAS</span>
+                                            <a class="collapse-item text-white" onclick="carregar('listas', 0);"
+                                                href="#">
+                                                <i class="fas fa-clipboard-list mr-2"></i>
+                                                <span>MINHAS LISTAS</span>
                                             </a>
                                         </li>
+                                        <li class="nav-item m-3">
+                                            <a class="collapse-item text-white" onclick="carregar('todo', 0);"
+                                                href="#">
+                                                <i class="fas fa-ad mr-2"></i>
+                                                <span>USAR LISTA DE MODELO</span>
+                                            </a>
+                                        </li>
+                                        <hr class="sidebar-divider">
+                                        <hr class="sidebar-divider">
+<?php 
+            if($usuario['idUsuario'] == 1 || $usuario['tipoUsuario'] > 0){
+?>
+                                        <li class="nav-item m-3">
+                                            <a class="collapse-item text-white" onclick="carregar('conta', 0);"
+                                                href="#">
+                                                <i class="fas fa-user-plus mr-2"></i>
+                                                <span>CRIAR CONTA DE USUÁRIO</span>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item m-3">
+                                            <a class="collapse-item text-white" onclick="carregar('usuarios', 0);"
+                                                href="#">
+                                                <i class="fas fa-users mr-2"></i>
+                                                <span>TODOS OS MEUS USUÁRIOS</span>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item m-3">
+                                            <a class="collapse-item text-white" onclick="carregar('todo', 0);"
+                                                href="#">
+                                                <i class="fas fa-lock-open mr-2"></i>
+                                                <span>MUDAR MINHA SENHA</span>
+                                            </a>
+                                        </li>
+                                        <hr class="sidebar-divider">
+                                        <hr class="sidebar-divider">
+                                        <li class="nav-item m-3">
+                                            <a class="collapse-item text-white" onclick="sair(1);"
+                                                href="#">
+                                                <i class="fas fa-sign-out-alt mr-2"></i>
+                                                <span>SAIR</span>
+                                            </a>
+                                        </li>
+<?php
+            }
+?>
                                     </ul>
                                 </div>
                             </nav>
@@ -148,10 +201,13 @@ $core = new scripta\lib\core();
                             </button>
                         </div>
                         <div class="modal-body">
-                            <p>Algumas das funções da página não estão disponíveis no modo "retrato" de telefones. Se deseja utilizar todas as funções disponíveis, utilize o modo paisagem ou um computador.</p>
+                            <p>Algumas das funções da página não estão disponíveis no modo "retrato" de telefones. Se
+                                deseja utilizar todas as funções disponíveis, utilize o modo paisagem ou um computador.
+                            </p>
                         </div>
                         <div class="modal-footer">
-                            <button onclick="$('#aviso').modal('hide');$('#aviso').remove();" type="button" class="btn btn-secondary">Fechar</button>
+                            <button onclick="$('#aviso').modal('hide');$('#aviso').remove();" type="button"
+                                class="btn btn-secondary">Fechar</button>
                         </div>
                     </div>
                 </div>
@@ -184,8 +240,8 @@ $core = new scripta\lib\core();
                 </div>
             </div>
             <!-- FIM DO MODAL DE ERRO -->
-             <!-- MODAL DE CONFIRMAÇÃO -->
-             <div class="modal fade" id="confirmacao" tabindex="-1" role="dialog" aria-hidden="true">
+            <!-- MODAL DE CONFIRMAÇÃO -->
+            <div class="modal fade" id="confirmacao" tabindex="-1" role="dialog" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -195,8 +251,8 @@ $core = new scripta\lib\core();
                             <p>Você certeza que deseja fazer isso? Uma vez feito, não terá mais volta.</p>
                         </div>
                         <div class="modal-footer">
-                        <button data-dismiss="modal" class="btn btn-primary">CANCELAR</button>
-                        <button onclick="deletar(2, this)" class="btn btn-danger">CONFIRMAR</button>
+                            <button data-dismiss="modal" class="btn btn-primary">CANCELAR</button>
+                            <button class="btn btn-danger">CONFIRMAR</button>
                         </div>
                     </div>
                 </div>
@@ -207,13 +263,15 @@ $core = new scripta\lib\core();
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">RESULTADO DA OPERAÇÃO:</h5>
+                            <h5 class="modal-title resultado-0">RESULTADO</h5>
                         </div>
                         <div class="modal-body">
-                            <p></p>
+                            <p class="resultado-1"></p>
                         </div>
                         <div class="modal-footer">
-                        <button onclick="location.reload();" data-dismiss="modal" class="btn btn-danger">CONFIRMAR</button>
+                            <button data-dismiss="modal" class="btn btn-primary">FECHAR</button>
+                            <button onclick="location.reload();" data-dismiss="modal"
+                                class="btn btn-okt-light">CONFIRMAR</button>
                         </div>
                     </div>
                 </div>
@@ -221,9 +279,7 @@ $core = new scripta\lib\core();
             <!-- FIM DO MODAL DE CONCLUSÃO -->
             <!-- jQuery, Bootstrap JS, FontAwesome, 3X dataTables, Script personalizado -->
             <script src="//code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
-            <script src="//stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-                integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-                crossorigin="anonymous">
+            <script src="//stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js">
             </script>
             <script src="//kit.fontawesome.com/bcd7c66434.js"></script>
             <script type="text/javascript" src="js/pdfmake.min.js">

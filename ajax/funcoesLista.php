@@ -14,7 +14,7 @@ if(isset($lista['id'])){
     $id = 0;
 }
 
-if($usuario['tipoUsuario'] != 0){
+if(isset($lista['anuncios'])){
     $tipo = 1;
 }else{
     $tipo = 0;

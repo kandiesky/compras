@@ -1,48 +1,9 @@
 <?php
-if(count($_POST) > 0){
-    header('content-type: application/json');
-    print_r(json_encode($_POST));
-}else{
+
+//662031201353
+require __DIR__.'/vendor/autoload.php';
+$core = new scripta\lib\core();
+$core->test("662031201353");
+
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>TESTE</title>
-</head>
-<body>
-    <form action="teste.php" method="post">
-        <input type="checkbox" name="f" id="">
-        <input type="text" name="a[]">
-        <input type="text" name="a[]">
-        <input type="text" name="a[]">
-        <input type="text" name="b">
-        <input type="text" name="c">
-        <input type="text" name="d">
-        <input type="text" name="e">
-        <button type="submit"></button>
-    </form>
-</body>
-</html>
-
-
-<!-- foreach ($conteudo as $chave => $item) {
-    $filtro = new NumberFormatter('pt_BR', NumberFormatter::CURRENCY);
-    $valor = str_replace(',', '.', $item[3]);
-    $valor = explode(".", $valor);
-    if (count($valor) >= 2){
-        $valor_decimal = substr(end($valor), 0, 2);
-        $valor = array_slice($valor, 0, -1);
-        $valor = implode("", $valor);
-        $valor = $valor . "," . $valor_decimal;
-    }else{
-        $valor[] = ",00";
-        $valor = implode("", $valor);
-    }
-    $valor_filtrado = $filtro->parse($valor);
-    $conteudo[$chave][3] =  "R$ ". $valor_filtrado;
-    $conteudo[$chave][4] =  $valor_filtrado * $item[2];
-} -->
-<?php }?>
+CREATE TABLE `u303824046_banco`.`compras_usr` ( `id` INT NOT NULL AUTO_INCREMENT COMMENT 'ID do usuário' , `avbn_id` INT NOT NULL COMMENT 'ID da AVBN que criou o usuário' , `nome` TEXT NOT NULL COMMENT 'Nome do Usuário' , `login` VARCHAR(256) NOT NULL COMMENT 'Login do Usuário' , `senha` VARCHAR(256) NOT NULL COMMENT 'Senha do usuário (criptografada)' , `email` TEXT NOT NULL COMMENT 'Email do usuário' , `local` TEXT NOT NULL COMMENT 'Local onde o Usuário reside' , `telefone` TEXT NOT NULL COMMENT 'Telefone do Usuário' , `tema` INT NOT NULL DEFAULT '1' COMMENT 'Número do tema que o usuário está utilizando/prefere' , `anuncios` INT NOT NULL DEFAULT '1' COMMENT 'Se o usuário aceita ver anúncios (obviamente 1 como padrão)' , `listas` TEXT NOT NULL COMMENT 'Array de IDs de listas que o usuário tem atualmente' , `config` TEXT NOT NULL COMMENT 'Array de configurações do usuário' , `data` INT NOT NULL COMMENT 'Data de criação da conta' , PRIMARY KEY (`id`)) ENGINE = InnoDB COMMENT = 'Tabela de usuários para LISTA DE COMPRAS';ALTER TABLE `compras_usr` CHANGE `data` `data` DATE NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Data de criação da conta';ALTER TABLE `compras_usr` ADD `token` TEXT NOT NULL COMMENT 'Tokén para mudança de senha caso seja requisitada' AFTER `email`;ALTER TABLE `compras_usr` ADD `avbn` INT NOT NULL COMMENT 'Caso seja o usuário de uma AVBN, o ID da mesma entrará aqui' AFTER `id`;ALTER TABLE `compras_usr` DROP `tema`;CREATE TABLE `u303824046_banco`.`compras_listas` ( `id` INT NOT NULL AUTO_INCREMENT COMMENT 'ID da lista' ,  `titulo` TEXT NOT NULL COMMENT 'Título da Lista' ,  `conteudo` JSON NOT NULL COMMENT 'Conteúdo da lista em JSON' ,  `data` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Data de criação' ,    PRIMARY KEY  (`id`)) ENGINE = InnoDB COMMENT = 'Listas de compras para utilitário \"Compras\"';ALTER TABLE `compras_usr` CHANGE `listas` `listas` JSON NOT NULL COMMENT 'Array de IDs de listas que o usuário tem atualmente';ALTER TABLE `compras_usr` CHANGE `config` `config` JSON NOT NULL COMMENT 'Array de configurações do usuário';ALTER TABLE `compras_listas` ADD `tipo` TINYINT NOT NULL DEFAULT '1' COMMENT 'Tipo de lista. 1 = lista de usuário. 2 = Lista de anunciante.' AFTER `conteudo`;ALTER TABLE `compras_listas` ADD `dono` MEDIUMINT NOT NULL COMMENT 'ID do dono da lista' AFTER `id`;ALTER TABLE `compras_listas` ADD `total` TEXT NOT NULL COMMENT 'Valor total da lista já formatado em reais' AFTER `conteudo`;ALTER TABLE `compras_listas` ADD `usuarios` JSON NOT NULL COMMENT 'Mantém salvo os usuários que estão visualizando essa lista' AFTER `tipo`;ALTER TABLE `compras_listas` CHANGE `tipo` `tipo` TINYINT(4) NOT NULL DEFAULT '0' COMMENT 'Tipo de lista. 0 = lista de usuário. 1 = Lista modelo.';ALTER TABLE `compras_usr` CHANGE `data` `data` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Data de criação da conta';ALTER TABLE `compras_usr` CHANGE `data` `data` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Data de criação da conta'; INSERT INTO `compras_usr` (`id`, `avbn`, `avbn_id`, `nome`, `login`, `senha`, `email`, `token`, `local`, `telefone`, `anuncios`, `listas`, `config`, `data`) VALUES ('1', '1', '1', 'Doralmir', 'doralmir', '$2y$10$/rvvkpWkF5SUe8SSecKZtuQMX5cHFDZPr5z5fRSRWVLDaEtES7bXm', 'doralmircarvalhorosa@gmail.com', '', 'Nova Iguaçu - RJ', '21123456789', '1', '', '', 'current_timestamp()');UPDATE `compras_usr` SET `senha` = '$2y$10$/rvvkpWkF5SUe8SSecKZtuQMX5cHFDZPr5z5fRSRWVLDaEtES7bXm' WHERE `compras_usr`.`id` = 1;

@@ -27,6 +27,9 @@ class core{
 			}
 		}
 	}
+	public function test($p){
+		print_r($this->hash->create($p));
+	}
 	/**
 	 * Validação de usuário
 	 * $u = usuario ou email
@@ -89,7 +92,7 @@ class core{
 
 		switch ($operacao) {
 			case "criarConta":
-				if($tipo > 0){
+				if($tipo > 0 || $uid == 1){
 					return true;
 				}else{
 					return false;
@@ -162,8 +165,12 @@ class core{
 	 * $id = id da lista
 	 * @return Array
 	 */
-	public function pegarLista($id = 0){
-		$sql = $this->db->prepare("SELECT * FROM `compras_listas` WHERE `id` = :id");
+	public function pegarLista($id = 0, $tipo = 0){
+		if($tipo == 0){
+			$sql = $this->db->prepare("SELECT * FROM `compras_listas` WHERE `id` = :id");
+		}elseif($tipo == 1){
+			$sql = $this->db->prepare("SELECT * FROM `compras_listas` WHERE `id` = :id AND `tipo` = '1'");
+		}
 		$sql->execute(array(':id' => $id));
 		$lista = $sql->fetch();
 		return $lista;
@@ -258,6 +265,14 @@ class core{
 		}
 		
 	}
+	private function modificarPropriedade($id = 0, $uid = 0){
+		$sql = $this->db->prepare("UPDATE `compras_listas` SET `dono` = ?, `usuarios` = ? WHERE `id` = ?");
+		if($sql->execute(array($uid, json_encode(array($uid)), $id))){
+			return true;
+		}else{
+			return false;
+		}
+	}
 	/**
 	 * Modifica a array de listas de adeptos do modelo
 	 * $id = id da lista
@@ -270,7 +285,7 @@ class core{
 		$sql = $this->db->prepare("SELECT (`usuarios`) FROM `compras_listas` WHERE id = :id");
 		$sql->execute(array(':id' => $id));
 		$lista = $sql->fetch();
-		$lista = json_decode($lista[0]);
+		$lista = json_decode($lista[0], true);
 		if ($operacao == "adicionar"){
 			$lista[] = $uid;
 			$lista = json_encode(array_unique($lista));
@@ -324,25 +339,42 @@ class core{
 					$this->modificarListasUsuario($id, $uid, $operacao);
 					print_r(json_encode(array('OK' => 0, 'mensagem' => "Lista deletada com sucesso!")));
 				}
+			}else{
+				if($this->modificarListasCompras($id, $uid, $operacao)){
+					if($this->modificarListasUsuario($id, $uid, $operacao)){
+						print_r(json_encode(array('OK' => 0, 'mensagem' => "A lista/modelo foi removido da sua tela inicial!")));
+					}else{
+						print_r(json_encode(array('OK' => 0, 'mensagem' => "Houve um erro ao remover a lista/modelo da sua tela inicial!")));
+					}
+				}else{
+					print_r(json_encode(array('OK' => 0, 'mensagem' => "Houve um erro ao remover a lista/modelo da sua tela inicial!")));
+				}
 			}
 		}
-		//print_r(array($uid, $titulo, $conteudo, $total, $tipo));
-		//print_r(json_encode(array('OK' => '$erro', 'mensagem' => '$msg')));
 	}
 	public function Conta($POST = array(), $operacao = ""){
 		session_start();
-		$tipo = $_SESSION['tipoUsuario'];
-		$uid = $_SESSION['idUsuario'];
+		$usuario = $_SESSION['compras'];
+		$tipo = $usuario['tipoUsuario'];
+		$uid = $usuario['idUsuario'];
+
 		if($operacao == "criarConta"){
-			if($this->checarAutoridade($uid, $tipo, $operacao)){
-				if($this->criarConta($POST, $uid)){
-					print_r(json_encode(array('OK' => 0, 'mensagem' => "Usuário criado!")));
+			if($this->checarExistenciaUsuario($POST['login'], $POST['email'])){
+				if($this->checarAutoridade($uid, $tipo, $operacao)){
+					$idContaCriada = $this->criarConta($POST, $uid);
+					if($idContaCriada != false){
+						print_r(json_encode(array('OK' => 0, 'mensagem' => "Conta criado com sucesso!")));
+					}else{
+						print_r(json_encode(array('OK' => 1, 'mensagem' => "Erro desconhecido ao criar conta! Tente novamente mais tarde.")));
+					}
 				}else{
-					print_r(json_encode(array('OK' => 1, 'mensagem' => "O usuário não foi criado! Tente com outro nome de usuário e email ou tente novamente mais tarde...")));
+					print_r(json_encode(array('OK' => 1, 'mensagem' => "Falha ao criar conta. Você não tem permissão para fazer isso!")));
 				}
 			}else{
-				print_r(json_encode(array('OK' => 1, 'mensagem' => "Falha ao criar conta. Você não tem permissão para fazer isso!")));
+				print_r(json_encode(array('OK' => 1, 'mensagem' => "Login ou email já em uso! Tente com outro.")));
 			}
+		}elseif($operacao == "editarConta"){
+
 		}
 	}
 	/**
@@ -352,8 +384,8 @@ class core{
 	 * $uid = quem está criando a conta
 	 */
 	private function criarConta($info = array(), $uid = 0){
-		$avbn = $info['avbn']; //ID da avbn que criou e não o tipo
-		$tipo = $info['tipo']; //Defaulta em 0 quando a AVBN cria //$tipo = tipo da conta (int); 0 = usuario; 1+ = avbn
+		$avbn = $uid; //ID da avbn que criou e não o tipo
+		$tipo = $info['avbn']; //Defaulta em 0 quando a AVBN cria //$tipo = tipo da conta (int); 0 = usuario; 1+ = avbn
 		$nome = $info['nome'];
 		$login = $info['login'];
 		$senha = $this->hash->create($info['senha']);
@@ -361,19 +393,47 @@ class core{
 		$local = $info['local'];
 		$telefone = $info['telefone'];
 		$anuncios = $info['anuncios'];
+		foreach ($info['listas'] as $index => $valor) {
+			$lista = $this->pegarLista($valor);
+			if($lista['tipo'] == 1){
+				$lista['tipo'] = 0;
+				$lista['conteudo'] = json_decode($lista['conteudo'], true); //Decodificar antes de recodificar
+				$idLista = $this->adicionarLista($uid, $lista);
+				$info['listas'][$index] = $idLista;
+			}
+		}
 		$listas = json_encode($info['listas']);
 		$config = "";
-
-		$sql = $this->db->prepare("INSERT INTO `compras_usr` (`avbn`, `avbn_id`, `nome`, `login`, `senha`, `email`, `local`, `telefone`, `anuncios`, `listas`, `config`) VALUES (:avbn, :tipo, :nome, :login, :senha, :email, :local, :telefone, :anuncios, :listas, :config)");
+		$sql = $this->db->prepare("INSERT INTO `compras_usr` (`avbn`, `avbn_id`, `nome`, `login`, `senha`, `email`, `local`, `telefone`, `anuncios`, `listas`, `config`) VALUES (:avbn, :avbnID, :nome, :login, :senha, :email, :local, :telefone, :anuncios, :listas, :config)");
 		
-		$bind = array(':avbn' => $avbn, ':tipo' => $tipo, ':nome' => $nome, ':login' => $login, ':senha' => $senha, ':email' => $email, ':local' => $local, ':telefone' => $telefone, ':anuncios' => $anuncios, ':listas' => $listas, ':config' => $config);
+		$bind = array(':avbn' => $tipo, ':avbnID' => $avbn, ':nome' => $nome, ':login' => $login, ':senha' => $senha, ':email' => $email, ':local' => $local, ':telefone' => $telefone, ':anuncios' => $anuncios, ':listas' => $listas, ':config' => $config);
 
 		if($sql->execute($bind)){
+			$sql = $this->db->prepare("SELECT (`id`) FROM `compras_usr` WHERE `login` = ? AND `email` = ?");
+			$sql->execute(array($login, $email));
+			$id = $sql->fetch();
+			foreach (json_decode($listas, true) as $idLista){
+				$this->modificarPropriedade($idLista, $id[0]);
+			}
+			return $id[0];
+		}else{
+			return false;
+		}
+	}
+	private function checarExistenciaUsuario($login = "", $email = ""){
+		$sql = $this->db->prepare("SELECT * FROM `compras_usr` WHERE `login` = :login OR `email` = :email");
+		$sql->execute(array(':login' => $login, ':email' => $email));
+		if($sql->rowCount() == 0){
 			return true;
 		}else{
 			return false;
 		}
 	}
+	public function pegarUsuarios($uid = 0){
+		$sql = $this->db->prepare("SELECT * FROM `compras_usr` WHERE `avbn_id` = :uid");
+		$sql->execute(array(':uid' => $uid));
+		return $sql->fetchAll();
+	} 
 }
 
 ?>
