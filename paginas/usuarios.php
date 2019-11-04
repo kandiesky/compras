@@ -4,7 +4,7 @@ require __DIR__.'/../vendor/autoload.php';
 $core = new scripta\lib\core();
 session_start(); 
 $usuario = $_SESSION['compras'];
-$array_usuarios = $core->pegarUsuarios($usuario['idUsuario']);
+$array_usuarios = $core->lerUsuarios($usuario['idUsuario']);
 $total = count($array_usuarios);
 if(is_array($array_usuarios) && count($array_usuarios) > 0){
     echo "
@@ -17,6 +17,7 @@ if(is_array($array_usuarios) && count($array_usuarios) > 0){
                         <table data-title='USUARIOS' class='table table-bordered' width='100%' cellspacing='0'>
                          <thead>
                             <tr>
+                                <th>ID</th>
                                 <th>Nome</th>
                                 <th>Login</th>
                                 <th>Email</th>
@@ -32,12 +33,28 @@ if(is_array($array_usuarios) && count($array_usuarios) > 0){
     foreach (array_reverse($array_usuarios) as $usuario) {
         echo "
                             <tr>
+                                <td>{$usuario['id']}</td>
                                 <td>{$usuario['nome']}</td>
                                 <td>{$usuario['login']}</td>
                                 <td>{$usuario['email']}</td>
                                 <td>{$usuario['local']}</td>
                                 <td>{$usuario['telefone']}</td>
-                                <td>-</td>
+                                <td>
+                                    <div class='d-flex justify-content-center'>
+                                        <a href='#' onclick='carregar(\"anexar\", {$usuario['id']})' class='btn btn-info btn-icon-split mr-1'>
+                                            <span class='icon text-white-50'>
+                                                <i class='fas fa-share'></i>
+                                            </span>
+                                            <span tittle='Envia uma cópia de lista(s) marcada(s)' class='text'>Enviar Listas</span>
+                                        </a>
+                                        <a href='#' onclick='carregar(\"perfil\", {$usuario['id']})' class='btn btn-okt-light btn-icon-split'>
+                                            <span class='icon text-white-50'>
+                                                <i class='fas fa-edit'></i>
+                                            </span>
+                                            <span class='text'>Editar</span>
+                                        </a>
+                                    </div>
+                                </td>
                                 <td>{$usuario['data']}</td>
                             </tr>
         ";

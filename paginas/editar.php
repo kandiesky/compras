@@ -1,7 +1,11 @@
 <?php if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] =='XMLHttpRequest'){
+  $lista = $_GET['id'];
+  if($lista == 0 ){
+    header("refresh:0");
+    exit;
+  }
   require __DIR__.'/../vendor/autoload.php';
   $core = new scripta\lib\core();
-  $lista = $_GET['id'];
   $lista = $core->pegarLista($lista);
   $items_decode = json_decode($lista['conteudo'], true);
   sort($items_decode);
@@ -52,7 +56,7 @@
         <div class="input-group-prepend">
           <span class="input-group-text">Preço do Item&nbsp;</span>
         </div>
-        <input required type="text" data-nome="preco" class="form-control validar">
+        <input required type="text" data-nome="preco" value="0" class="form-control validar">
         <div class="input-group-append">
           <span class="input-group-text">R$</span>
         </div>
@@ -82,7 +86,7 @@
     $index = 1;
     foreach ($items_decode as $chave => $item) {
 ?>
-    <div id="input-<?php print_r($index);?>" class="">
+    <div id="input-<?php print_r($index);?>">
       <h4 class="mt-3"><?php print_r($item[0]);?></h4>
       <div class="input-group mb-3">
         <div class="input-group-prepend">
@@ -122,7 +126,6 @@
           <span class="text">Remover</span>
         </a>
       </div>
-    </div>
   </div> <!-- Items -->
     
 <?php
@@ -134,12 +137,9 @@
 </div>
 <script>
 $('.validar').each(function(){
-  $(this).val($(this).maskMoney('unmasked')[0])
-  $('.validar').on('blur', function () {
-    $(this).val($(this).maskMoney('unmasked')[0])
-  })
+  $(this).val($(this)[0].value.replace("R$", "").replace(/\s/g,''))
 })
 $('.numerico').numbersOnly()
-$('.validar').maskMoney({prefix:'R$ ', allowNegative: true, thousands:'.', decimal:',', affixesStay: false})
+$('.validar').maskMoney({prefix:'R$ ', allowNegative: true, thousands:'.', decimal:',', affixesStay: false, selectAllOnFocus: true})
 </script>
 <?php } ?>

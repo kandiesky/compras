@@ -1,24 +1,27 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <?php 
-session_start(); 
+session_start();
 if(!isset($_SESSION['compras']) && !is_int($_SESSION['compras']['idUsuario'])){
     header('location: /okituke/redeokituke/compras/');
     exit; 
 }else{
+    require __DIR__.'/vendor/autoload.php';
+    $core = new scripta\lib\core();
     $usuario = $_SESSION['compras'];
+    if(isset($_SESSION['anunciante'])){
+        $anunciante = $_SESSION['anunciante'];
+        $core->adicionarAnunciante($usuario['idUsuario'], $anunciante);
+        unset($_SESSION['anunciante']);
+    }
 }
-require __DIR__.'/vendor/autoload.php';
-$core = new scripta\lib\core();
-//var_dump($usuario);
 ?>
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <!-- CSS -->
-    <link rel="stylesheet" href="css/app_compras.css">
+    <link rel="stylesheet" href="css/app_compras-1.1.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
 
     <title>Lista de Compras</title>
@@ -47,34 +50,43 @@ $core = new scripta\lib\core();
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
                     aria-expanded="true" aria-controls="collapseTwo">
                     <i class="fas fa-list    "></i>
-                    <span>SUAS LISTAS</span>
+                    <span>LISTAS</span>
                 </a>
                 <div id="collapseTwo" class="collapse" data-parent="#accordionSidebar">
                     <div class="bg-okt-dark py-2 collapse-inner rounded collapse-fix">
                         <h6 class="collapse-header">OPÇÕES COM LISTAS</h6>
                         <a class="collapse-item" onclick="carregar('adicionar', 0);" href="#">ADICIONAR LISTA</a>
                         <a class="collapse-item" onclick="carregar('listas', 0);" href="#">MINHAS LISTAS</a>
-                        <a class="collapse-item" onclick="carregar('todo', 0);" href="#">USAR LISTA DE MODELO</a>
+<?php 
+            if($usuario['idUsuario'] == 1 || $usuario['tipoUsuario'] > 0){
+?>
                     </div>
                 </div>
             </li>
-<?php 
-            if($usuario['idUsuario'] == 1 || $usuario['tipoUsuario'] > 0){
+<?php
+            }
 ?>
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
                     aria-expanded="true" aria-controls="collapseUtilities">
-                    <i class="fas fa-ad"></i>
-                    <span>CONTAS</span>
+                    <i class="fas fa-user-cog"></i>
+                    <span>CONTA</span>
                 </a>
                 <div id="collapseUtilities" class="collapse" data-parent="#accordionSidebar">
                     <div class="bg-okt-dark py-2 collapse-inner rounded collapse-fix">
-                        <h6 class="collapse-header">CONTAS DE USUÁRIOS</h6>
+<?php 
+            if($usuario['idUsuario'] == 1 || $usuario['tipoUsuario'] > 0){
+?>
+                        <h6 class="collapse-header">CLIENTES</h6>
                         <a class="collapse-item" href="#" onclick="carregar('conta', 0)">CRIAR CONTA DE USUÁRIO</a>
-                        <a class="collapse-item" href="#" onclick="carregar('usuarios', 0)">TODOS OS MEUS USUÁRIOS</a>
+                        <a class="collapse-item" href="#" onclick="carregar('usuarios', 0)">TODOS OS MEUS CLIENTES</a>
+                        <a class="collapse-item" href="#" onclick="carregar('anexar', 0)">ENVIAR LISTA MODELO PARA CLIENTE</a>
                         <hr class="sidebar-divider">
+<?php 
+            }
+?>
                         <h6 class="collapse-header">MINHA CONTA</h6>
-                        <a class="collapse-item" href="#" onclick="carregar('todo', 0)">MUDAR MINHA SENHA</a>
+                        <a class="collapse-item" href="#" onclick="carregar('perfil', <?php print_r($usuario['idUsuario']);?>)">MUDAR MINHAS INFORMAÇÕES</a>
                     </div>
                 </div>
             </li>
@@ -87,9 +99,6 @@ $core = new scripta\lib\core();
                     <i class="fa fa-cogs" aria-hidden="true"></i>
                     <span>PERSONALIZAR</span></a>
             </li>
-<?php
-            }
-?>
             <hr class="sidebar-divider">
             <div class="sidebar-heading">
                 CONTA
@@ -132,13 +141,6 @@ $core = new scripta\lib\core();
                                                 <span>MINHAS LISTAS</span>
                                             </a>
                                         </li>
-                                        <li class="nav-item m-3">
-                                            <a class="collapse-item text-white" onclick="carregar('todo', 0);"
-                                                href="#">
-                                                <i class="fas fa-ad mr-2"></i>
-                                                <span>USAR LISTA DE MODELO</span>
-                                            </a>
-                                        </li>
                                         <hr class="sidebar-divider">
                                         <hr class="sidebar-divider">
 <?php 
@@ -158,11 +160,14 @@ $core = new scripta\lib\core();
                                                 <span>TODOS OS MEUS USUÁRIOS</span>
                                             </a>
                                         </li>
+<?php
+            }
+?>
                                         <li class="nav-item m-3">
-                                            <a class="collapse-item text-white" onclick="carregar('todo', 0);"
+                                            <a class="collapse-item text-white" onclick="carregar('perfil', <?php print_r($usuario['idUsuario']);?>);"
                                                 href="#">
                                                 <i class="fas fa-lock-open mr-2"></i>
-                                                <span>MUDAR MINHA SENHA</span>
+                                                <span>MUDAR MINHAS INFORMAÇÕES</span>
                                             </a>
                                         </li>
                                         <hr class="sidebar-divider">
@@ -174,9 +179,6 @@ $core = new scripta\lib\core();
                                                 <span>SAIR</span>
                                             </a>
                                         </li>
-<?php
-            }
-?>
                                     </ul>
                                 </div>
                             </nav>
@@ -186,7 +188,9 @@ $core = new scripta\lib\core();
             </div>
             <div class="col w-100 mt-3">
                 <div id="content" class="d-flex flex-column justify-content-center">
-                    <?php include('scripta/cards.php');?>
+<?php 
+                    include('scripta/cards.php');
+?>
                 </div>
             </div>
             <!-- FIM DA PÁGINA (CONTENT-WRAPPER) -->
@@ -288,7 +292,9 @@ $core = new scripta\lib\core();
             </script>
             <script type="text/javascript" src="js/dataTables.js">
             </script>
-            <script src="js/app_compras.js"></script>
+            <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-maskmoney/3.0.2/jquery.maskMoney.min.js"></script>
+            <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
+            <script src="js/app_compras-1.1.js"></script>
 </body>
 
 </html>

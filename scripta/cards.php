@@ -1,6 +1,6 @@
 <?php 
 $array_listas = $core->lerListas($usuario['idUsuario']);
-$limite = 5;
+$limite = 6;
 $index = 0;
 if(is_array($array_listas) && count($array_listas) > 0){
     foreach (array_reverse($array_listas) as $lista) {
@@ -9,7 +9,7 @@ if(is_array($array_listas) && count($array_listas) > 0){
         echo "
             <div class='card shadow mb-4'>
                 <div class='card-header py-3'>
-                    <h6 class='m-0 font-weight-bold text-okt-medium'>{$lista['titulo']}</h6>
+                <h6 class='m-0 font-weight-bold text-okt-medium'>{$lista['titulo']}</h6>
                 </div>
                 <div class='card-body'>
                     <div class='table-responsive'>
@@ -58,11 +58,11 @@ if(is_array($array_listas) && count($array_listas) > 0){
                         </table>
                     </div>
                     <div class='d-flex justify-content-end mt-2'>
-                        <a href='#' onclick='carregar(\"todo\", {$lista['id']})' class='btn btn-okt-light btn-icon-split'>
+                        <a href='#' onclick='carregar(\"editar\", {$lista['id']})' class='btn btn-okt-light btn-icon-split'>
                             <span class='icon text-white-50'>
                                 <i class='fas fa-edit'></i>
                             </span>
-                            <span class='text'>".(($lista['tipo'] == 0)?'Editar Lista':'Editar Lista')."</span>
+                            <span class='text'>Editar Lista</span>
                         </a>
                         <a href='#' onclick='deletar(1, {$lista['id']})' class='btn btn-danger btn-icon-split ml-2'>
                             <span class='icon text-white-50'>
@@ -74,6 +74,9 @@ if(is_array($array_listas) && count($array_listas) > 0){
                 </div>
             </div>
         ";
+        if($index == 0 || $index == 2 || $index  == 4 || $index == 6){
+            include('scripta/anuns.php');
+        }
         $index++;
         }
     }

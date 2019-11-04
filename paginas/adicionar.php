@@ -49,19 +49,45 @@
         <div class="input-group-append">
           <span class="input-group-text">R$</span>
         </div>
-      </div>
+    </div>
 <?php 
       session_start();
       if($_SESSION['compras']['tipoUsuario'] > 0){
 ?>
-      <div class="input-group">
+      <div class="input-group" id="opcoes">
           <div class="input-group-prepend">
+          <button type="button" class="btn btn-small btn-info" data-toggle="modal" data-target="#infoModelo">
+            <i class="fas fa-info-circle"></i>
+          </button>
             <div class="input-group-text mr-1">
-              <input type="checkbox" class="cursor-pointer" onclick="alert('ATENÇÃO! Listas criadas como modelo não podem ser editadas depois de criadas.');" name="anuncios">
+              <input type="checkbox" class="cursor-pointer" onclick="alert('ATENÇÃO! Listas enviadas para o usuário não estarão mais sobre seu controle. Nenhuma modificação que você fizer afetará a do cliente.');" name="anuncios">
               <span class="input-group-text ml-3"><i class="fas fa-ad mr-1"></i> Lista Modelo / Anunciante</span>
             </div>
           </div>
         </div>
+      <div id="infoModelo" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">INFORMAÇÕES SOBRE LISTA "MODELO"</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p>Uma lista <i>modelo</i> exibe algumas diferenças para a lista comum:<br><br>
+              Por exemplo, listas modelo podem ser copiadas para clientes quando você cria contas;<br><br>
+              Listas modelo <strong>sempre</strong> serão mostradas para seus clientes, geralmente de forma aleatória;<br><br>
+              Quando um cliente vê uma lista modelo, terá um pequeno visual informando para ele que essa lista é um anúncio;<br><br>
+              Assim como listas normais, listas modelo também podem ser imprimidas. <small>(Dica: é possível colocar cupons de desconto dentro da lista utilizando valores negativos em um <i>item</i>)</small>;<br><br>
+              <strong>Clientes não podem modificar sua lista modelo. Apenas você pode.</strong></p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+            </div>
+          </div>
+        </div>
+      </div>
 <?php
       }
       session_write_close();

@@ -1,7 +1,7 @@
 <?php
 session_start();
 if(isset($_GET['AD'])){
-  $_SESSION['compras']['AD'] = $_GET['AD'];
+  $_SESSION['anunciante'] = $_GET['AD'];
 }
 if(isset($_SESSION['compras']) && isset($_SESSION['compras']['idUsuario'])){
   header('location: inicio');

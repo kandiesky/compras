@@ -29,6 +29,11 @@ if(isset($lista['data'])){
     };
     $conteudo = $lista['data'];
     foreach ($conteudo as $chave => $item) {
+        if(empty($item[3])){
+            $item[3] = 0;
+        }
+        $item[3] = str_replace(".", "", $item[3]);
+        $item[3] = str_replace(",", ".", $item[3]);
         $valor = $item[3];
         $total += $valor * $item[2];
         $conteudo[$chave][3] =  $filtro->formatCurrency($valor, "BRL");
