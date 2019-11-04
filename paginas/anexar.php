@@ -64,7 +64,7 @@
 $('select').select2({
   theme: "bootstrap",
   width: '100%',
-  placeholder: 'Selecione os modelos',
+  placeholder: 'Selecione',
   language: 'pt-BR'
 })
 $('.select2-w-100').parent()
