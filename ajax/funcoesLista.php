@@ -3,7 +3,7 @@ session_start();
 $usuario = $_SESSION['compras'];
 require __DIR__.'/../vendor/autoload.php';
 $core = new scripta\lib\core();
-$filtro = new NumberFormatter('pt_BR', NumberFormatter::CURRENCY);
+$filtro = new \NumberFormatter('pt_BR', \NumberFormatter::CURRENCY);
 
 $lista = $_POST;
 $operacao = $lista['operacao'];
